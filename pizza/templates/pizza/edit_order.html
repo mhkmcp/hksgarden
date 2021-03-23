@@ -1,0 +1,15 @@
+<h1>Edit Pizza</h1>
+
+{% if note %}
+<h5>{{note}}</h5>
+{% endif  %}
+
+<form action="{% url 'edit_order' pizza.id %}" method="post">
+
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <input type="submit" value="Edit Order">
+</form>
+
+

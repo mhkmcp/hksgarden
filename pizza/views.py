@@ -15,7 +15,8 @@ def order(request):
         # filled_form = PizzaModelForm(request.POST, request.FILES)   # for image input
         filled_form = PizzaModelForm(request.POST)
         if filled_form.is_valid():
-            filled_form.save()
+            created_pizza = filled_form.save()
+            created_pizza_pk = created_pizza.id
             note = 'Thanks for Ordering! Your %s %s and %s Pizza is on its way :) ' %(
                 filled_form.cleaned_data.get('size'),
                 filled_form.cleaned_data.get('topping1'),
@@ -25,7 +26,8 @@ def order(request):
             context = {
                 'pizza_form': pizza_form,
                 'multiple_form': multiple_form,
-                'note': note
+                'note': note,
+                'created_pizza_pk': created_pizza_pk
             }
             return render(request, 'pizza/order.html', context)
 
@@ -67,4 +69,23 @@ def pizzas(request):
         return render(request, 'pizza/pizzas.html', context)
 
 
-# def edit_order(request):
+def edit_order(request, pk):
+    pizza = Pizza.objects.get(pk=pk)
+    form = PizzaModelForm(instance=pizza)
+    if request.method == 'POST':
+        filled_form = PizzaModelForm(request.POST, instance=pizza)
+        if filled_form.is_valid():
+            filled_form.save()
+            form = filled_form
+            context = {
+                'form': form,
+                'pizza': pizza,
+                'note': 'Order has been Updated!'
+            }
+            return render(request, 'pizza/edit_order.html', context)
+
+    context = {
+        'form': form,
+        'pizza': pizza
+    }
+    return render(request, 'pizza/edit_order.html', context)
