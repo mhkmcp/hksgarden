@@ -9,6 +9,7 @@ def home(request):
 
 def order(request):
     if request.method == 'POST':
+        # filled_form = PizzaModelForm(request.POST, request.FILES)   # for image input
         filled_form = PizzaModelForm(request.POST)
         if filled_form.is_valid():
             note = 'Thanks for Ordering! Your %s %s and %s Pizza is on its way :) ' %(
